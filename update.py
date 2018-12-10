@@ -63,15 +63,7 @@ charge=[]
 
 
 for i in range(len(atom_section)):
-	#a=int(atom_section[i][0])
-	#b=atom_section[i][1]
-	#c=float(atom_section[i][2])
-	#d=float(atom_section[i][3])
-	#e=float(atom_section[i][4])
-	#f=atom_section[i][5]
-	#g=int(atom_section[i][6])
-	#h=atom_section[i][7]
-	#j=float(atom_section[i][8])
+	
 	atom_id.append(int(atom_section[i][0]))
 	atom_name.append(atom_section[i][1])
 	x_coor.append(float(atom_section[i][2]))
@@ -91,10 +83,7 @@ target_atom_id=[]
 bond_type=[]
 
 for i in range(len(bond_section)):
-	#a=int(bond_section[i][0])
-	#b=int(bond_section[i][1])
-	#c=int(bond_section[i][2])
-	#d=bond_section[i][3]
+	
 	bond_id.append(int(bond_section[i][0]))
 	origin_atom_id.append(int(bond_section[i][1]))
 	target_atom_id.append(int(bond_section[i][2]))
@@ -114,22 +103,22 @@ for i in range(len(atom_section)):
 		Head.append(None)
 		Tail.append(None)
 ##BONDING ROW
-###########################################################
-bond_row_head=[]
-bond_row_tail=[]
-add_row=[None for i in range(len(atom_id))]
+######################################################
+bond_row_head=[]   #this is the list with all atoms_id bonded to head
+bond_row_tail=[]   #this is the list with all atoms_id bonded to tail
+add_row=[None for i in range(len(atom_id))] #this will be the column i have to add to df, I set all default values None 
 
-ind=0
+ind=0 #index initial value. maybe it can be useless
 for i in range(len(atom_section)):
-	if atom_name[i]==Head[0]:
-		add_row[i]=True
-		ind=atom_id[i]
-for i in range(len(bond_id)):
-	if origin_atom_id[i]==ind:
-		bond_row_head.append(target_atom_id[i])
+	if atom_name[i]==Head[0]:    #i have to look for the head/tail atom in all the atom_name rows
+		add_row[i]=True	     # the row with the head atom is set to True
+		ind=atom_id[i]       #ind is the index that is the same of atom_id
+for i in range(len(bond_id)):#now i have to check in the bond_section which atoms are bonded to head atom,
+	if origin_atom_id[i]==ind:   #the index corrispond to the row of the head atom
+		bond_row_head.append(target_atom_id[i])  #i have to append the atoms_id  in a list
 	if target_atom_id[i] ==ind:
 		bond_row_head.append(origin_atom_id[i])
-for i in range(len(atom_section)):
+for i in range(len(atom_section)):   #then i replace the row where there was True bool value with the list of the atoms_bonded to the head 
 	if add_row[i]==True:
 		add_row[i]=bond_row_head
 
@@ -137,8 +126,8 @@ for i in range(len(atom_section)):
 for i in range(len(atom_section)):
         if atom_name[i]==Tail[0]:
                 add_row[i]=True
-                ind=atom_id[i]
-for i in range(len(bond_id)):
+                ind=atom_id[i]       #the same thing with the tail, i know probably there is a better way without using so many for loop
+for i in range(len(bond_id)):        #i'll try to find a better way to make it more short and general.
         if origin_atom_id[i]==ind:
                 bond_row_tail.append(target_atom_id[i])
         if target_atom_id[i] ==ind:
@@ -150,25 +139,19 @@ for i in range(len(atom_section)):
 ################################################
 list_keys=['atom_id','atom_name','x_coor','y_coor','z_coor','atom_type','subst_id','subst_name','charge','head','tail','add row']
 list_values=[atom_id,atom_name,x_coor,y_coor,z_coor,atom_type,subst_id,subst_name,charge,Head,Tail,add_row]
-#list_keys=['atom_id','atom_name','x_coor','y_coor','z_coor','atom_type','subst_id','subst_name','charge']
-#list_values=[atom_id,atom_name,x_coor,y_coor,z_coor,atom_type,subst_id,subst_name,charge]
 
-zipped=list(zip(list_keys,list_values))
-
+zipped=list(zip(list_keys,list_values))     #i found a better way to create dataframe, this way it looks more ordered
 data=dict(zipped)
 nodf=pd.DataFrame(data)
 df=nodf.set_index('atom_id')     # i have changed the first atomcolumn with atom_id column because they were redundant
-
 print(df)
 
 list_keys_bond=['Bond_id','Origin_atom_id','Target_atom_id','Bond_type']
 list_values_bond=[bond_id,origin_atom_id,target_atom_id,bond_type]
-
 zipped_bond=list(zip(list_keys_bond,list_values_bond))
-data_Bond=dict(zipped_bond)
-
-nodf_bond=pd.DataFrame(data_Bond)
-df_Bond=nodf_bond.set_index('Bond_id')
+data_Bond=dict(zipped_bond)            #same thing for bond_section.
+nodf_bond=pd.DataFrame(data_Bond)	##I know it is not necessary to print bond section 
+df_Bond=nodf_bond.set_index('Bond_id')##but i  did it for checK
 print(df_Bond)
 
 
@@ -181,6 +164,7 @@ print(df_Bond)
 #aname=pmol.df['atom_name']
 #xyz = pmol.df[['x', 'y', 'z']].values
 
+##CLASSES
 
 class CapFragment():
 	def __init__(self,df):
