@@ -111,10 +111,10 @@ add_row=[None for i in range(len(atom_id))]
 ind=True
 ind0=True
 for i in range(len(atom_id)):
-	if atom_name[i]==Head[0] and Head[0]!=0:
+	if atom_name[i]==Head[0]:
 		ind0=atom_id[i]
 
-	elif atom_name[i]==Tail[0] and Tail[0]!=0:
+	elif atom_name[i]==Tail[0]:
 		ind=atom_id[i]
 
 	else:
