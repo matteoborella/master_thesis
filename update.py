@@ -104,37 +104,44 @@ for i in range(len(atom_section)):
 		Tail.append(None)
 ##BONDING ROW
 ######################################################
-bond_row_head=[]   #this is the list with all atoms_id bonded to head
-bond_row_tail=[]   #this is the list with all atoms_id bonded to tail
-add_row=[None for i in range(len(atom_id))] #this will be the column i have to add to df, I set all default values None 
+bond_row_head=[]
+bond_row_tail=[]
+add_row=[None for i in range(len(atom_id))]
 
-ind=0 #index initial value. maybe it can be useless
-for i in range(len(atom_section)):
-	if atom_name[i]==Head[0]:    #i have to look for the head/tail atom in all the atom_name rows
-		add_row[i]=True	     # the row with the head atom is set to True
-		ind=atom_id[i]       #ind is the index that is the same of atom_id
-for i in range(len(bond_id)):#now i have to check in the bond_section which atoms are bonded to head atom,
-	if origin_atom_id[i]==ind:   #the index corrispond to the row of the head atom
-		bond_row_head.append(target_atom_id[i])  #i have to append the atoms_id  in a list
-	if target_atom_id[i] ==ind:
-		bond_row_head.append(origin_atom_id[i])
-for i in range(len(atom_section)):   #then i replace the row where there was True bool value with the list of the atoms_bonded to the head 
-	if add_row[i]==True:
-		add_row[i]=bond_row_head
+ind=True
+ind0=True
+for i in range(len(atom_id)):
+	if atom_name[i]==Head[0] and Head[0]!=0:
+		ind0=atom_id[i]
 
-	
-for i in range(len(atom_section)):
-        if atom_name[i]==Tail[0]:
-                add_row[i]=True
-                ind=atom_id[i]       #the same thing with the tail, i know probably there is a better way without using so many for loop
-for i in range(len(bond_id)):        #i'll try to find a better way to make it more short and general.
-        if origin_atom_id[i]==ind:
-                bond_row_tail.append(target_atom_id[i])
-        if target_atom_id[i] ==ind:
-                bond_row_tail.append(origin_atom_id[i])
-for i in range(len(atom_section)):
-        if add_row[i]==True:
-                add_row[i]=bond_row_tail
+	elif atom_name[i]==Tail[0] and Tail[0]!=0:
+		ind=atom_id[i]
+
+	else:
+		ind=False
+		ind0=False
+
+
+for j in range(len(bond_id)):
+
+	if origin_atom_id[j]==ind0:
+		bond_row_head.append(target_atom_id[j])
+
+	if target_atom_id[j]==ind0:
+		bond_row_head.append(origin_atom_id[j])
+
+	if origin_atom_id[j]==ind:
+		bond_row_tail.append(target_atom_id[j])
+
+	if target_atom_id[j]==ind:
+		bond_row_tail.append(origin_atom_id[j])
+	else:
+		continue
+if ind0==True:
+	add_row[ind0]=bond_row_head
+if ind==True:
+	add_row[ind]=bond_row_tail
+
 
 ################################################
 list_keys=['atom_id','atom_name','x_coor','y_coor','z_coor','atom_type','subst_id','subst_name','charge','head','tail','add row']
