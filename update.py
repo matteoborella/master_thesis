@@ -329,11 +329,6 @@ class Thiol:
 		self.df = orientation(self.df, self.atom_id_tail, self.atom_id_head)
 		#show_pca(self.df)
 
-		#self.atom_id_tail= len(self.df)+frag2.atom_id_tail
-		#self.np_bond_row_tail= len(self.df)+frag2.np_bond_row_tail
-
-
-
 
 #we need to decide what is the head and what is the tail
 #we have gold core and the S of thiol
@@ -448,9 +443,6 @@ def renamer(a,b_copy):
 	return q
 
 
-
-
-
 Fragments=list(sys.argv[1].split(','))
 times=np.array(sys.argv[2].split(','),dtype='int')
 gna=os.path.realpath(Fragments[0])
@@ -469,9 +461,6 @@ else:
 		for j in range(times[i]):
 			m=Fragment(gna)
 			t.polymerize(m)
-
-#pol= reader(Fragments.split(',')[0])
-#def rename(df_new):
 
 def writer(thiol):
 	fp= open('Thiol_prova.mol2','w')
