@@ -1,6 +1,5 @@
 import math
 import numpy as np
-import re
 #from biopandas.mol2 import PandasMol2
 import pandas as pd
 import sys
